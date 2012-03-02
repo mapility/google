@@ -1,0 +1,11 @@
+.mapfullscreen_toggler {
+	display: block;
+	background: url("zoom-64px.png") no-repeat scroll top left;
+	width:64px;
+	height:64px;
+	cursor: pointer;
+}
+
+.mapfullscreen_toggler.active {
+	background-position:0 -64px;
+}
