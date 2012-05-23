@@ -57,7 +57,7 @@ ContaoMapping.Marker.Google = new ContaoMapping.Class({
 				map : null, //map.map,
 				icon : img
 			};
-			var zindex=parseInt(this.options.zindex?this.options.zindex:map.options.zIndex);
+			var zindex=parseInt(this.options.zindex?this.options.zindex:this.getMap().options.zIndex);
 			if(zindex)
 				options.zIndex=zindex;
 			this.$marker = new google.maps.Marker(options);
