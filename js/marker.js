@@ -55,7 +55,10 @@ ContaoMapping.Marker.Google = new ContaoMapping.Class({
 			var options = {
 				position : new google.maps.LatLng(this.options.latitude, this.options.longitude),
 				map : null, //map.map,
-				icon : img
+				icon : img,
+				// HACK: work around bug in canvas based rendering in maps v3.
+				// See: http://stackoverflow.com/questions/11845916/google-maps-marker-zindex-doesnt-work-for-two-icon-types-symbol-and-string
+				optimized: false
 			};
 			var zindex=parseInt(this.options.zindex?this.options.zindex:this.getMap().options.zIndex);
 			if(zindex)
