@@ -29,8 +29,8 @@ ContaoMapping.Map.Google = new ContaoMapping.Class({
 			'physicalmap':google.maps.MapTypeId.TERRAIN
 		};
 		this.lookupControls={
-			'normal': google.maps.MapTypeControlStyle.DEFAULT, 
-			'menu': google.maps.MapTypeControlStyle.DROPDOWN_MENU, 
+			'normal': google.maps.MapTypeControlStyle.DEFAULT,
+			'menu': google.maps.MapTypeControlStyle.DROPDOWN_MENU,
 			'hierarchical': google.maps.MapTypeControlStyle.HORIZONTAL_BAR
 		};
 		this.lookupZoom={
@@ -142,24 +142,6 @@ ContaoMapping.Map.Google = new ContaoMapping.Class({
 		return this.$googlemap;
 	},
 
-	getGeolocation:function(handleGeolocation, handleNoGeolocation)
-	{
-		// Try W3C Geolocation (Preferred)
-		if(navigator.geolocation)
-		{
-			navigator.geolocation.getCurrentPosition(
-				function(position) {
-					if(handleGeolocation)handleGeolocation(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
-				}, function() {
-					if(handleNoGeolocation)handleNoGeolocation(true);
-				});
-			return;
-		}
-		// Browser doesn't support Geolocation
-		if(handleNoGeolocation)
-			handleNoGeolocation(false);
-	},
-
 	getExtendedBoundsAsUrl: function()
 	{
 		var bounds=this.getNative().getBounds();
@@ -250,8 +232,8 @@ ContaoMapping.Map.Google = new ContaoMapping.Class({
 						if(data.address_components[i].types=='locality,political'){title+=data.address_components[i].long_name;}
 					}
 					marker = mymap.addMarker(new mymap.options.markerClass({
-										infotext:title, 
-										latitude: data.geometry.location.lat(), 
+										infotext:title,
+										latitude: data.geometry.location.lat(),
 										longitude: data.geometry.location.lng()}));
 				}
 				else
