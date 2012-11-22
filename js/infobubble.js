@@ -1,3 +1,6 @@
+/*
+ * http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js
+ */
 // ==ClosureCompiler==
 // @compilation_level ADVANCED_OPTIMIZATIONS
 // @externs_url http://closure-compiler.googlecode.com/svn/trunk/contrib/externs/maps/google_maps_api_v3.js
@@ -457,10 +460,10 @@ InfoBubble.prototype.getZIndex = function() {
  * zIndex changed MVC callback
  */
 InfoBubble.prototype.zIndex_changed = function() {
-  var zIndex = this.getZIndex_();
+  var zIndex = this.getZIndex();
 
   this.bubble_.style['zIndex'] = this.baseZIndex_ = zIndex;
-  this.close_.style['zIndex'] = zIndex_ + 1;
+  this.close_.style['zIndex'] = zIndex + 1;
 };
 InfoBubble.prototype['zIndex_changed'] = InfoBubble.prototype.zIndex_changed;
 
@@ -956,7 +959,6 @@ InfoBubble.prototype.isOpen = function() {
 InfoBubble.prototype['isOpen'] = InfoBubble.prototype.isOpen;
 
 
-
 /**
  * Close the InfoBubble
  */
@@ -979,24 +981,40 @@ InfoBubble.prototype['close'] = InfoBubble.prototype.close;
 
 
 /**
- * Open the InfoBubble
+ * Open the InfoBubble (asynchronous).
  *
  * @param {google.maps.Map=} opt_map Optional map to open on.
  * @param {google.maps.MVCObject=} opt_anchor Optional anchor to position at.
  */
 InfoBubble.prototype.open = function(opt_map, opt_anchor) {
+  var that = this;
+  window.setTimeout(function() {
+    that.open_(opt_map, opt_anchor);
+  }, 0);
+};
+
+/**
+ * Open the InfoBubble
+ * @private
+ * @param {google.maps.Map=} opt_map Optional map to open on.
+ * @param {google.maps.MVCObject=} opt_anchor Optional anchor to position at.
+ */
+InfoBubble.prototype.open_ = function(opt_map, opt_anchor) {
+  this.updateContent_();
+
   if (opt_map) {
     this.setMap(opt_map);
   }
 
   if (opt_anchor) {
     this.set('anchor', opt_anchor);
+    this.bindTo('anchorPoint', opt_anchor);
     this.bindTo('position', opt_anchor);
   }
 
   // Show the bubble and the show
   this.bubble_.style['display'] = this.bubbleShadow_.style['display'] = '';
-  var animation = !!!this.get('disableAnimation');
+  var animation = !this.get('disableAnimation');
 
   if (animation) {
     // Add the animation
@@ -1007,7 +1025,7 @@ InfoBubble.prototype.open = function(opt_map, opt_anchor) {
   this.redraw_();
   this.isOpen_ = true;
 
-  var pan = !!!this.get('disableAutoPan');
+  var pan = !this.get('disableAutoPan');
   if (pan) {
     var that = this;
     window.setTimeout(function() {
@@ -1169,7 +1187,7 @@ InfoBubble.prototype['getContent'] = InfoBubble.prototype.getContent;
 /**
  * Sets the marker content and adds loading events to images
  */
-InfoBubble.prototype.content_changed = function() {
+InfoBubble.prototype.updateContent_ = function() {
   if (!this.content_) {
     // The Content area doesnt exist.
     return;
@@ -1197,16 +1215,13 @@ InfoBubble.prototype.content_changed = function() {
   }
   this.redraw_();
 };
-InfoBubble.prototype['content_changed'] =
-    InfoBubble.prototype.content_changed;
-
 
 /**
  * Image loaded
  * @private
  */
 InfoBubble.prototype.imageLoaded_ = function() {
-  var pan = !!!this.get('disableAutoPan');
+  var pan = !this.get('disableAutoPan');
   this.redraw_();
   if (pan && (this.tabs_.length == 0 || this.activeTab_.index == 0)) {
     this.panToView();
@@ -1318,6 +1333,7 @@ InfoBubble.prototype['setTabActive'] = InfoBubble.prototype.setTabActive;
 InfoBubble.prototype.setTabActive_ = function(tab) {
   if (!tab) {
     this.setContent('');
+    this.updateContent_();
     return;
   }
 
@@ -1337,6 +1353,7 @@ InfoBubble.prototype.setTabActive_ = function(tab) {
   tab.style['paddingBottom'] = this.px(padding + borderWidth);
 
   this.setContent(this.tabs_[tab.index].content);
+  this.updateContent_();
 
   this.activeTab_ = tab;
 
@@ -1485,6 +1502,7 @@ InfoBubble.prototype.updateTab = function(index, opt_label, opt_content) {
 
   if (this.activeTab_ == tab.tab) {
     this.setContent(tab.content);
+    this.updateContent_();
   }
   this.redraw_();
 };
@@ -1713,21 +1731,21 @@ InfoBubble.prototype.figureOutSize_ = function() {
  *  @return {number} The height of the anchor.
  */
 InfoBubble.prototype.getAnchorHeight_ = function() {
-  var anchorHeight = 0;
   var anchor = this.get('anchor');
   if (anchor) {
+    var anchorPoint = /** @type google.maps.Point */(this.get('anchorPoint'));
 
-    if (!anchorHeight && anchor.height) {
-      anchorHeight = anchor.height;
-    }
-
-    // HACK
-    if (!anchorHeight) {
-      anchorHeight = 34;
+    if (anchorPoint) {
+      return -1 * anchorPoint.y;
     }
   }
-  return anchorHeight;
+  return 0;
 };
+
+InfoBubble.prototype.anchorPoint_changed = function() {
+  this.draw();
+};
+InfoBubble.prototype['anchorPoint_changed'] = InfoBubble.prototype.anchorPoint_changed;
 
 
 /**
