@@ -5,12 +5,12 @@
  * @copyright  Cyberspectrum 2012
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @package    ContaoMaps
- * @license    LGPL 
+ * @license    LGPL
  * @filesource
  */
 
 /**
- * Class GoogleMap 
+ * Class GoogleMap
  *
  * @copyright  Cyberspectrum 2009
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
@@ -68,7 +68,7 @@ class GoogleMap extends ContaoMap
 			break;
 		}
 	}
-	
+
 	public function __get($key)
 	{
 		switch($key)
@@ -143,7 +143,7 @@ class GoogleMap extends ContaoMap
 			'css' => array('system/modules/contaomaps_google/html/map.css'),
 		));
 		// google must be before our library.
-		array_insert($arrHead['js'], 0, 'http://maps.google.com/maps/api/js?language='.$objPage->language.'&amp;sensor='.($this->sensor ? 'true' : 'false'));
+		array_insert($arrHead['js'], 0, 'http://maps.google.com/maps/api/js?language='.$GLOBALS['objPage']->language.'&amp;sensor='.($this->sensor ? 'true' : 'false'));
 		return $arrHead;
 	}
 
