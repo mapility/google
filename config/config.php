@@ -5,7 +5,7 @@
  * @copyright  Cyberspectrum 2012
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @package    ContaoMaps
- * @license    LGPL 
+ * @license    LGPL
  * @filesource
  */
 
@@ -32,6 +32,10 @@ $GLOBALS['CONTAOMAP_JSLIBS']['system/modules/contaomaps_google/js/layer.js'] = a
 );
 
 $GLOBALS['CONTAOMAP_JSLIBS']['system/modules/contaomaps_google/js/markermanager.js'] = array(
+	'system/modules/contaomaps_google/js/marker.js'
+);
+
+$GLOBALS['CONTAOMAP_JSLIBS']['system/modules/contaomaps_google/js/markerclusterer.js'] = array(
 	'system/modules/contaomaps_google/js/marker.js'
 );
 
