@@ -79,19 +79,22 @@ ContaoMapping.Marker.Google = new ContaoMapping.Class({
 
 	createInfoBubble: function()
 	{
-		var infopos = this.options.infoposition?this.options.infoposition.split(','):[200,200];
-		this.infoBubble = new InfoBubble({map: this.getGMap(),
-										maxWidth: 300,
-										position: new google.maps.LatLng(this.options.latitude+infopos[0], this.options.longitude+infopos[1]),
-										content: this.options.infotext
-										});
-		this.infoBubble.setBackgroundClassName('infobubble');
 		google.maps.event.addListener(this.getNative(), 'click', this.openInfoBubble.bind(this));
-		google.maps.event.addListener(this.infoBubble, 'closeclick', this.closeInfoBubble.bind(this));
 	},
 
 	openInfoBubble: function()
 	{
+		if (!this.infoBubble)
+		{
+			var infopos = this.options.infoposition?this.options.infoposition.split(','):[200,200];
+			this.infoBubble = new InfoBubble({map: this.getGMap(),
+											maxWidth: 300,
+											position: new google.maps.LatLng(this.options.latitude+infopos[0], this.options.longitude+infopos[1]),
+											content: this.options.infotext
+											});
+			this.infoBubble.setBackgroundClassName('infobubble');
+			google.maps.event.addListener(this.infoBubble, 'closeclick', this.closeInfoBubble.bind(this));
+		}
 		if(!this.infoBubble.isOpen())
 		{
 			if(this.getMap().infobubble)
@@ -99,6 +102,7 @@ ContaoMapping.Marker.Google = new ContaoMapping.Class({
 				this.getMap().infobubble.closeInfoBubble();
 			}
 			this.getMap().savePosition();
+
 			this.infoBubble.open();
 			this.getMap().infobubble = this;
 		}
