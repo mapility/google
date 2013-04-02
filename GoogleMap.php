@@ -99,7 +99,7 @@ class GoogleMap extends ContaoMap
 	public function jsonMapOptions()
 	{
 		$mapinfo='';
-		foreach(array('id' => 'name', 'zoom'=>'zoom','zoomcontrol'=>'zoomcontrol','center'=>'center','view'=>'view','aviews'=>'views','viewcontrol'=>'mapcontrol','params'=>'params', 'centerOnUser' => 'sensor', 'url' => 'ajaxUrl', 'layerswitch' => 'layerswitch') as $k=>$v)
+		foreach(array('id' => 'name', 'zoom'=>'zoom','zoomcontrol'=>'zoomcontrol','center'=>'center','view'=>'view','aviews'=>'views','viewcontrol'=>'mapcontrol','params'=>'params', 'centerOnUser' => 'sensor', 'url' => 'ajaxUrl', 'layerswitch' => 'layerswitch', 'loadinganimation' => 'loadinganimation') as $k=>$v)
 		{
 			if(!is_null($this->$v))
 				$v=deserialize($this->$v);
