@@ -175,8 +175,8 @@ class GoogleMap extends ContaoMap
 	 */
 	public function getAjaxXML()
 	{
-		if($this->Input->get('area'))
-			$this->setArea($this->Input->get('area'));
+		if(\Input::get('area'))
+			$this->setArea(\Input::get('area'));
 		$this->collectAll();
 		return $this->compileCustomIcons();
 	}
