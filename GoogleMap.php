@@ -120,7 +120,7 @@ class GoogleMap extends ContaoMap
 	{
 		if(count($this->layerIds))
 		{
-			$objLayer=$this->Database->prepare('SELECT * FROM tl_googlemaplayer WHERE id IN ('.implode(',',$this->layerIds).')')->execute();
+			$objLayer=\Database::getInstance()->prepare('SELECT * FROM tl_googlemaplayer WHERE id IN ('.implode(',',$this->layerIds).')')->execute();
 			while($objLayer->next())
 			{
 				$layer = $objLayer->row();
