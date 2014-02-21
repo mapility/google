@@ -99,7 +99,7 @@ class GoogleMap extends ContaoMap
 	public function jsonMapOptions()
 	{
 		$mapinfo='';
-		foreach(array('id' => 'name', 'zoom'=>'zoom','zoomcontrol'=>'zoomcontrol','center'=>'center','view'=>'view','aviews'=>'views','viewcontrol'=>'mapcontrol','params'=>'params', 'centerOnUser' => 'sensor', 'url' => 'ajaxUrl', 'layerswitch' => 'layerswitch', 'loadinganimation' => 'loadinganimation') as $k=>$v)
+		foreach(array('id' => 'name', 'zoom'=>'zoom','zoomControl'=>'zoomcontrol','center'=>'center','view'=>'view','aviews'=>'views','viewcontrol'=>'mapcontrol','params'=>'params', 'centerOnUser' => 'sensor', 'url' => 'ajaxUrl', 'layerswitch' => 'layerswitch', 'loadinganimation' => 'loadinganimation') as $k=>$v)
 		{
 			if(!is_null($this->$v))
 				$v=deserialize($this->$v);
@@ -108,8 +108,23 @@ class GoogleMap extends ContaoMap
 			elseif(is_numeric($v))
 				$v = intval($v);
 			if($v)
+			{
+				//quickfox for handling zoomcontrol
+				if ($k == 'zoomControl') {
+					$v = ($v == 'none') ? false : true;
+				}
+				
 				$mapinfo.=(strlen($mapinfo) ? ',':'').$k.':'.json_encode($v);
+			}
+				
 		}
+		
+		//quickfox for handling zoomcontrol options.This needs some optimisation as well as the zoomcontrol itself
+		if ($this->zoomcontrol != 'none')
+		{
+			$mapinfo.=(strlen($mapinfo) ? ',':'').'zoomControlOptions'.':{style:google.maps.ZoomControlStyle.'.strtoupper($this->zoomcontrol).'}';
+		}
+		
 		$additional=$_GET;
 		if(count($_GET))
 			$mapinfo.=(strlen($mapinfo) ? ',':'').'additionalparams:'.json_encode($additional);
