@@ -38,7 +38,7 @@ class GoogleMap extends ContaoMap
 		$this->views = array('normal');
 		$this->layerswitch = false;
 
-		$this->setKeys($arrData, array('zoom', 'sensor', 'params', 'zoomcontrol', 'mapcontrol', 'view', 'views', 'layerswitch'));
+		$this->setKeys($arrData, array('zoom', 'sensor', 'scrollwheel', 'params', 'zoomcontrol', 'mapcontrol', 'view', 'views', 'layerswitch'));
 
 /*
 		// add map params.
@@ -60,6 +60,7 @@ class GoogleMap extends ContaoMap
 			case 'view':
 			case 'views':
 			case 'layerswitch':
+			case 'scrollwheel':
 				$this->arrOther[$key] = deserialize($value);
 			break;
 
@@ -81,6 +82,7 @@ class GoogleMap extends ContaoMap
 			case 'view':
 			case 'views':
 			case 'layerswitch':
+			case 'scrollwheel':
 				return array_key_exists($key, $this->arrOther) ? $this->arrOther[$key] : NULL;
 
 			default:
@@ -92,7 +94,7 @@ class GoogleMap extends ContaoMap
 	public function writeOptionsToTemplate(Template $objTemplate)
 	{
 		parent::writeOptionsToTemplate($objTemplate);
-		foreach(array('zoom', 'sensor', 'params', 'zoomcontrol', 'mapcontrol', 'view', 'views', 'layerswitch') as $key)
+		foreach(array('zoom', 'sensor', 'scrollwheel', 'params', 'zoomcontrol', 'mapcontrol', 'view', 'views', 'layerswitch') as $key)
 			$objTemplate->$key=$this->$key;
 	}
 
@@ -123,6 +125,11 @@ class GoogleMap extends ContaoMap
 		if ($this->zoomcontrol != 'none')
 		{
 			$mapinfo.=(strlen($mapinfo) ? ',':'').'zoomControlOptions'.':{style:google.maps.ZoomControlStyle.'.strtoupper($this->zoomcontrol).'}';
+		}
+		//quickfix for scrollwheel
+		if ($this->scrollwheel )
+		{
+			$mapinfo.=(strlen($mapinfo) ? ',':'').'scrollwheel: false';
 		}
 		
 		$additional=$_GET;
