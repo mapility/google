@@ -38,7 +38,7 @@ class GoogleMap extends ContaoMap
 		$this->views = array('normal');
 		$this->layerswitch = false;
 
-		$this->setKeys($arrData, array('zoom', 'sensor', 'scrollwheel', 'params', 'zoomcontrol', 'mapcontrol', 'view', 'views', 'layerswitch'));
+		$this->setKeys($arrData, array('zoom', 'sensor', 'scrollwheel', 'params', 'styles', 'zoomcontrol', 'mapcontrol', 'view', 'views', 'layerswitch'));
 
 /*
 		// add map params.
@@ -55,6 +55,7 @@ class GoogleMap extends ContaoMap
 			case 'zoom':
 			case 'sensor':
 			case 'params':
+			case 'styles':
 			case 'zoomcontrol':
 			case 'mapcontrol':
 			case 'view':
@@ -77,6 +78,7 @@ class GoogleMap extends ContaoMap
 			case 'zoom':
 			case 'sensor':
 			case 'params':
+			case 'styles':
 			case 'zoomcontrol':
 			case 'mapcontrol':
 			case 'view':
@@ -94,14 +96,14 @@ class GoogleMap extends ContaoMap
 	public function writeOptionsToTemplate(Template $objTemplate)
 	{
 		parent::writeOptionsToTemplate($objTemplate);
-		foreach(array('zoom', 'sensor', 'scrollwheel', 'params', 'zoomcontrol', 'mapcontrol', 'view', 'views', 'layerswitch') as $key)
+		foreach(array('zoom', 'sensor', 'scrollwheel', 'params', 'styles', 'zoomcontrol', 'mapcontrol', 'view', 'views', 'layerswitch') as $key)
 			$objTemplate->$key=$this->$key;
 	}
 
 	public function jsonMapOptions()
 	{
 		$mapinfo='';
-		foreach(array('id' => 'name', 'zoom'=>'zoom','zoomControl'=>'zoomcontrol','center'=>'center','view'=>'view','aviews'=>'views','viewcontrol'=>'mapcontrol','params'=>'params', 'centerOnUser' => 'sensor', 'url' => 'ajaxUrl', 'layerswitch' => 'layerswitch', 'loadinganimation' => 'loadinganimation') as $k=>$v)
+		foreach(array('id' => 'name', 'zoom'=>'zoom','zoomControl'=>'zoomcontrol','center'=>'center','view'=>'view','aviews'=>'views','viewcontrol'=>'mapcontrol','params'=>'params','styles'=>'styles', 'centerOnUser' => 'sensor', 'url' => 'ajaxUrl', 'layerswitch' => 'layerswitch', 'loadinganimation' => 'loadinganimation') as $k=>$v)
 		{
 			if(!is_null($this->$v))
 				$v=deserialize($this->$v);
@@ -115,7 +117,10 @@ class GoogleMap extends ContaoMap
 				if ($k == 'zoomControl') {
 					$v = ($v == 'none') ? false : true;
 				}
-				
+				//prevent double json_encoding
+				if ($k == 'styles') {
+					$v = json_decode($v);
+				}
 				$mapinfo.=(strlen($mapinfo) ? ',':'').$k.':'.json_encode($v);
 			}
 				
